@@ -85,9 +85,8 @@ Environment variables: `PORT` (3000), `DB_PATH` (`./data/commitrps.db`), `COMMIT
 ## Team
 | Name | Roll no. | Role |
 |---|---|---|
-| _Member 1_ | | Crypto core & attacks |
-| _Member 2_ | | Backend, API, deployment |
-| _Member 3_ | | Frontend, UX, documentation |
+| Urba Kaleem | 24i-2108 | Crypto core & attacks Backend, API, deployment |
+| Hafsa Naeem| 24i-2001 | Frontend, UX, documentation |
 
 ## License
 MIT
