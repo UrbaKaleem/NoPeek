@@ -1,0 +1,14 @@
+# One-click deploy: Render dashboard → New → Blueprint → pick this repo.
+services:
+  - type: web
+    name: commitrps
+    runtime: node
+    plan: free
+    buildCommand: npm ci
+    startCommand: node server/index.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: DB_PATH
+        value: ./data/commitrps.db
