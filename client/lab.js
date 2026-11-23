@@ -50,8 +50,8 @@ const CARDS = [
     show: (r) => {
       const max = Math.max(...r.naive.map((x) => x.nsPerCompare), ...r.ct.map((x) => x.nsPerCompare));
       const row = (x, cls) => `<div class="bar"><span>${x.matchingPrefix} chars</span><div class="track"><div class="fill ${cls}" style="width:${(100 * x.nsPerCompare) / max}%"></div></div><span class="mono">${Math.round(x.nsPerCompare)}ns</span></div>`;
-      return `<div class="grid g2"><div><h3>Naive early-exit compare</h3><div class="bars">${r.naive.map((x) => row(x, 'win')).join('')}</div><p class="small mono">slowest / fastest = ${r.naiveSpread}×</p></div>
-        <div><h3>Constant-time compare</h3><div class="bars">${r.ct.map((x) => row(x, 'loss')).join('')}</div><p class="small mono">slowest / fastest = ${r.ctSpread}×</p></div></div>
+      return `<div class="grid g2"><div><h3>Naive early-exit compare</h3><div class="bars">${r.naive.map((x) => row(x, 'win')).join('')}</div><p class="small mono">full-match ÷ no-match time = ${r.naiveSpread}×</p></div>
+        <div><h3>Constant-time compare</h3><div class="bars">${r.ct.map((x) => row(x, 'loss')).join('')}</div><p class="small mono">full-match ÷ no-match time = ${r.ctSpread}×</p></div></div>
         <p class="small muted">Time grows with the matching prefix for the naive version, so a secret leaks one character at a time. The constant-time version stays flat (remaining variation is measurement noise / JIT).</p>`;
     } },
   { id: 'A7', title: 'Selective abort', tag: 'Fairness',

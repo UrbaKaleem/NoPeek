@@ -1,4 +1,4 @@
-flowchart TB
+flowchart LR
     M["Plaintext move m<br/>(rock=1, paper=2, scissors=3)"] --> P
     RNG["CSPRNG: 64 bytes<br/>→ r mod ℓ"] --> P
     P["Pedersen<br/>C = m·G + r·H"] --> PK["Okamoto PoK<br/>(T, s1, s2), c = H(ctx, G, H, C, T)"]

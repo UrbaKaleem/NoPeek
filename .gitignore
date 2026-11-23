@@ -3,3 +3,4 @@ data/
 public/
 *.log
 .DS_Store
+docs/report/report.html
