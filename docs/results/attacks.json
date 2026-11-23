@@ -1,0 +1,177 @@
+{
+  "A1": {
+    "id": "A1",
+    "title": "Brute-force a weak hash commitment",
+    "secret": "rock",
+    "log": [
+      {
+        "label": "Unsalted SHA-256(move)",
+        "guesses": 1,
+        "ms": 0.078,
+        "recovered": "rock",
+        "correct": true
+      },
+      {
+        "label": "16-bit salt",
+        "guesses": 46180,
+        "ms": 357.1,
+        "recovered": "rock",
+        "correct": true
+      },
+      {
+        "label": "256-bit CSPRNG salt (shipped)",
+        "guesses": "≈ 3·2^255 expected",
+        "ms": null,
+        "recovered": null,
+        "correct": false,
+        "note": "≈ 4.26e+64 years at this speed"
+      }
+    ],
+    "verdict": "Move space is only 3 values, so without a large random salt the commitment hides nothing. A 256-bit salt makes guessing infeasible."
+  },
+  "A2": {
+    "id": "A2",
+    "title": "Malleability: copycat C′ = C + G",
+    "rounds": 1000,
+    "vulnerable": {
+      "win": 655,
+      "loss": 345,
+      "tie": 0,
+      "rejected": 0,
+      "winRate": 65.5
+    },
+    "mitigated": {
+      "win": 0,
+      "loss": 0,
+      "tie": 0,
+      "rejected": 1000,
+      "winRate": 0
+    },
+    "verdict": "Without a proof of knowledge the attacker wins 65.5% of rounds (fair play: 33.3%). With the context-bound Okamoto proof, 1000/1000 mauled commitments were rejected at commit time."
+  },
+  "A3": {
+    "id": "A3",
+    "title": "Copy / replay an opponent's commitment",
+    "victimMove": "paper",
+    "vulnerable": {
+      "accepted": true,
+      "effect": "attacker mirrors the victim and forces a draw every round (or replays an old match)"
+    },
+    "mitigated": {
+      "contextBoundAccepted": false,
+      "signatureAccepted": false
+    },
+    "verdict": "Binding the commitment to tournament/match/round/player and signing it with the player's Ed25519 key makes copied or replayed commitments fail verification."
+  },
+  "A4": {
+    "id": "A4",
+    "title": "Trapdoor generator H = t·G (equivocation)",
+    "vulnerable": {
+      "committed": "rock",
+      "openedAs": "scissors",
+      "accepted": true
+    },
+    "mitigated": {
+      "accepted": false,
+      "H": "1422719e7cc68725eb4a5c03a2c1808a61c5d0f023f3945e391dff46669eb61e"
+    },
+    "verdict": "Binding only holds if nobody knows log_G(H). CommitRPS derives H with RFC 9380 hash-to-curve from a public string, so the operator has no trapdoor."
+  },
+  "A5": {
+    "id": "A5",
+    "title": "Weak RNG: blinding factor from 16-bit Math.random()",
+    "secret": "scissors",
+    "vulnerable": {
+      "tries": 6612,
+      "ms": 33.2,
+      "recovered": "scissors",
+      "correct": true
+    },
+    "mitigated": {
+      "note": "r is uniform in Z_ℓ (64 CSPRNG bytes mod ℓ). Pedersen is then perfectly hiding: for every move m′ there exists an r′ with C = m′G + r′H, so even an unbounded attacker learns nothing."
+    },
+    "verdict": "The commitment is only as hiding as its randomness. A low-entropy r lets the opponent read your move before you reveal it."
+  },
+  "A6": {
+    "id": "A6",
+    "title": "Timing leak in secret comparison",
+    "len": 2048,
+    "naive": [
+      {
+        "matchingPrefix": 0,
+        "nsPerCompare": 53.4
+      },
+      {
+        "matchingPrefix": 512,
+        "nsPerCompare": 3569.3
+      },
+      {
+        "matchingPrefix": 1024,
+        "nsPerCompare": 7267.2
+      },
+      {
+        "matchingPrefix": 1536,
+        "nsPerCompare": 11070
+      },
+      {
+        "matchingPrefix": 2047,
+        "nsPerCompare": 10497.6
+      }
+    ],
+    "ct": [
+      {
+        "matchingPrefix": 0,
+        "nsPerCompare": 11520.6
+      },
+      {
+        "matchingPrefix": 512,
+        "nsPerCompare": 11850.4
+      },
+      {
+        "matchingPrefix": 1024,
+        "nsPerCompare": 5895
+      },
+      {
+        "matchingPrefix": 1536,
+        "nsPerCompare": 5697.4
+      },
+      {
+        "matchingPrefix": 2047,
+        "nsPerCompare": 5429.4
+      }
+    ],
+    "naiveSpread": 196.58,
+    "ctSpread": 0.47,
+    "verdict": "An early-exit comparison takes longer the more leading characters match, so an attacker can recover a secret byte by byte. CommitRPS hashes session tokens and compares with crypto.timingSafeEqual / a branch-free loop."
+  },
+  "A7": {
+    "id": "A7",
+    "title": "Selective abort after seeing the opponent's reveal",
+    "rounds": 1000,
+    "vulnerable": {
+      "win": 335,
+      "loss": 0,
+      "tie": 327,
+      "stalled": 338
+    },
+    "mitigated": {
+      "win": 318,
+      "loss": 359,
+      "tie": 323,
+      "stalled": 0
+    },
+    "verdict": "Commitments cannot force someone to open them. Without a deadline, a cheater never loses — matches just stall. CommitRPS enforces a reveal deadline and awards the match to the player who did reveal."
+  },
+  "A8": {
+    "id": "A8",
+    "title": "Malicious referee swaps a commitment",
+    "vulnerable": {
+      "note": "Without signatures, players would have to trust the server's copy of every commitment."
+    },
+    "mitigated": {
+      "swappedCommitmentAccepted": false,
+      "forgedRevealAccepted": false
+    },
+    "verdict": "Every commit and reveal is signed by the player's Ed25519 key, and every browser re-verifies the opponent's signature, proof and opening. The referee can delay, but cannot change a move undetected."
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "node": "v22.23.5",
+  "rows": [
+    {
+      "name": "Pedersen commit  C = mG + rH",
+      "scheme": "pedersen",
+      "opsPerSec": 658,
+      "msPerOp": 1.5197972234042554
+    },
+    {
+      "name": "Pedersen opening check",
+      "scheme": "pedersen",
+      "opsPerSec": 699,
+      "msPerOp": 1.4297461071428574
+    },
+    {
+      "name": "Okamoto PoK — prove",
+      "scheme": "pedersen",
+      "opsPerSec": 544,
+      "msPerOp": 1.8373032018348618
+    },
+    {
+      "name": "Okamoto PoK — verify",
+      "scheme": "pedersen",
+      "opsPerSec": 334,
+      "msPerOp": 2.9947136447761187
+    },
+    {
+      "name": "SHA-256 hash commit",
+      "scheme": "hash",
+      "opsPerSec": 129880,
+      "msPerOp": 0.007699443786572222
+    },
+    {
+      "name": "SHA-256 hash opening check",
+      "scheme": "hash",
+      "opsPerSec": 127378,
+      "msPerOp": 0.00785064929069941
+    },
+    {
+      "name": "Ed25519 sign",
+      "scheme": "both",
+      "opsPerSec": 1851,
+      "msPerOp": 0.5401049319654426
+    },
+    {
+      "name": "Ed25519 verify",
+      "scheme": "both",
+      "opsPerSec": 808,
+      "msPerOp": 1.2376616728395058
+    },
+    {
+      "name": "Full client commit (Pedersen+PoK+sig)",
+      "scheme": "pedersen",
+      "opsPerSec": 235,
+      "msPerOp": 4.260958225531918
+    },
+    {
+      "name": "Full client commit (hash+sig)",
+      "scheme": "hash",
+      "opsPerSec": 1769,
+      "msPerOp": 0.5653111644997181
+    },
+    {
+      "name": "Full verifier check (Pedersen)",
+      "scheme": "pedersen",
+      "opsPerSec": 254,
+      "msPerOp": 3.9293916431372553
+    },
+    {
+      "name": "Full verifier check (hash)",
+      "scheme": "hash",
+      "opsPerSec": 821,
+      "msPerOp": 1.2178718613138682
+    }
+  ],
+  "sizes": {
+    "pedersen": {
+      "commitment": 32,
+      "proof": 96,
+      "signature": 64,
+      "opening": 32,
+      "commitMsg": 469
+    },
+    "hash": {
+      "commitment": 32,
+      "proof": 0,
+      "signature": 64,
+      "opening": 32,
+      "commitMsg": 253
+    }
+  }
+}
