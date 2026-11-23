@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CommitRPS — Pedersen-committed Rock·Paper·Scissors</title>
+  <meta name="description" content="A decentralized rock-paper-scissors tournament where every move is sealed with a Pedersen commitment before anyone reveals." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔒</text></svg>" />
+  <link rel="stylesheet" href="/styles.css" />
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#/"><span class="seal">C</span> CommitRPS</a>
+    <nav id="nav">
+      <a href="#/" data-nav="home">Play</a>
+      <a href="#/learn" data-nav="learn">How it works</a>
+      <a href="#/inspector" data-nav="inspector">Inspector</a>
+      <a href="#/lab" data-nav="lab">Attack Lab</a>
+      <a href="#/bench" data-nav="bench">Benchmarks</a>
+      <a href="#/account" data-nav="account" id="nav-account">Account</a>
+    </nav>
+    <button class="btn ghost small" id="tour-btn" data-tip="Take the guided tour of the app">Tour</button>
+  </header>
+  <main id="app" aria-live="polite"></main>
+  <div id="toast" role="status"></div>
+  <footer class="foot">
+    CS-3002 Information Security · Topic 13: Cryptographic Commitments ·
+    ristretto255 · Ed25519 · SHA-256 via audited <a href="https://github.com/paulmillr/noble-curves" target="_blank" rel="noopener">@noble</a> libraries
+  </footer>
+</body>
+</html>
