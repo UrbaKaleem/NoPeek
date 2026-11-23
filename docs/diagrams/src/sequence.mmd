@@ -1,0 +1,29 @@
+sequenceDiagram
+    autonumber
+    participant A as Alice's browser
+    participant R as Referee server (untrusted)
+    participant B as Bob's browser
+    Note over A,B: Setup: each browser generates an Ed25519 key, signs a one-time challenge, gets a session
+    rect rgba(242,179,61,0.15)
+    Note over A,B: Phase 1: COMMIT (moves stay secret)
+    A->>A: m_A in {1,2,3}, r_A random, C_A = m_A*G + r_A*H
+    A->>A: pi_A = PoK(m_A, r_A) bound to ctx_A, sig_A = Sign(sk_A, ctx_A, C_A, T_A)
+    A->>R: POST /commit {C_A, pi_A, sig_A}
+    R->>R: verify sig_A + pi_A, store, append to audit log
+    B->>B: m_B, r_B, C_B, pi_B, sig_B (same steps)
+    B->>R: POST /commit {C_B, pi_B, sig_B}
+    R-->>A: WebSocket: both committed, phase = REVEAL (deadline starts)
+    R-->>B: WebSocket: phase = REVEAL
+    end
+    rect rgba(56,211,192,0.15)
+    Note over A,B: Phase 2: REVEAL
+    A->>A: re-verify sig_B and pi_B locally (don't trust the referee)
+    A->>R: POST /reveal {m_A, r_A, Sign(sk_A, ...)}
+    B->>B: re-verify sig_A and pi_A locally
+    B->>R: POST /reveal {m_B, r_B, Sign(sk_B, ...)}
+    R->>R: check m*G + r*H == C for both, judge, log result
+    R-->>A: result (tie: new round with fresh commitments)
+    R-->>B: result
+    A->>A: re-verify Bob's opening locally
+    end
+    Note over R: No reveal by deadline = forfeit. Wrong opening = forfeit.

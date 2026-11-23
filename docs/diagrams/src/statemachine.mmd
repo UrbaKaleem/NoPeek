@@ -1,0 +1,11 @@
+stateDiagram-v2
+    [*] --> pending: bracket created
+    pending --> commit: both players known
+    commit --> reveal: 2 valid commitments
+    commit --> done: commit deadline, only one committed
+    commit --> commit: deadline, nobody committed (new round)
+    reveal --> commit: both revealed, tie (round += 1)
+    reveal --> done: both revealed, winner
+    reveal --> done: invalid opening (cheater forfeits)
+    reveal --> done: reveal deadline (non-revealer forfeits)
+    done --> [*]

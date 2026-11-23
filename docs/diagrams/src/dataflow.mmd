@@ -1,0 +1,16 @@
+flowchart TB
+    M["Plaintext move m<br/>(rock=1, paper=2, scissors=3)"] --> P
+    RNG["CSPRNG: 64 bytes<br/>→ r mod ℓ"] --> P
+    P["Pedersen<br/>C = m·G + r·H"] --> PK["Okamoto PoK<br/>(T, s1, s2), c = H(ctx, G, H, C, T)"]
+    CTX["ctx = CommitRPS/v1 | t | match | round | player"] --> PK
+    PK --> SG["Ed25519 signature<br/>over ctx, C, T"]
+    SG --> NET1(["Network → referee<br/>{C, proof, sig}<br/>hides m"])
+    M -. "kept locally" .-> SEC[("(m, r) in<br/>localStorage")]
+    RNG -. "kept locally" .-> SEC
+    NET1 --> WAIT{"Both<br/>committed?"}
+    WAIT -- yes --> REV
+    SEC --> REV["Reveal: (m, r) + signature"]
+    REV --> NET2(["Network → referee<br/>{m, r, sig}<br/>plaintext again"])
+    NET2 --> CHK{"m·G + r·H == C ?<br/>signature valid?"}
+    CHK -- yes --> J["Judge round<br/>tie → new round"]
+    CHK -- no --> F["Forfeit: signed<br/>proof of cheating"]

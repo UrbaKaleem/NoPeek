@@ -1,0 +1,30 @@
+flowchart LR
+    subgraph TB1["Trusted: player's device"]
+        UI["Browser UI<br/>(lobby, match, tour)"]
+        CC["Crypto core<br/>@noble ristretto255, Ed25519, SHA-2"]
+        LS[("localStorage<br/>Ed25519 secret key<br/>(m, r) until reveal")]
+        UI --> CC
+        CC <--> LS
+    end
+    subgraph TB2["Untrusted: referee (Render / Railway)"]
+        API["Express REST API<br/>+ rate limit + CSP"]
+        WS["WebSocket push"]
+        REF["Referee state machine<br/>commit → reveal → judge<br/>deadlines, bracket"]
+        VER["Verifier<br/>(same crypto core)"]
+        BOT["Honest bots<br/>(own Ed25519 keys)"]
+        DB[("SQLite<br/>players, key history,<br/>hashed sessions, moves")]
+        LOG[("Hash-chained<br/>audit log")]
+        API --> REF
+        REF --> VER
+        REF --> DB
+        REF --> LOG
+        REF --> WS
+        BOT --> REF
+    end
+    subgraph TB3["Anyone"]
+        INS["Inspector page<br/>re-verifies the log"]
+        LAB["Attack Lab<br/>adversary simulations"]
+    end
+    CC -- "HTTPS: C, proof, signature<br/>(never m or r before reveal)" --> API
+    WS -- "wss: state updates" --> UI
+    LOG -- "GET /api/audit" --> INS
